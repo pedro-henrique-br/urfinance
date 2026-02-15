@@ -91,7 +91,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   );
 };
 
-// Componente Label auxiliar
 const Label: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
   children, 
   className = '' 
@@ -103,7 +102,6 @@ const Label: React.FC<{ children: React.ReactNode; className?: string }> = ({
   );
 };
 
-// Componente Input auxiliar
 const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => {
   return (
     <input

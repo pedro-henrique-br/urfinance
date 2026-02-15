@@ -11,6 +11,7 @@ import { PasswordConfirmDialog } from "@/components/settings/PasswordConfirmDial
 import { useUserSettings } from "@/hooks/user/useUserSettings";
 import { User, Bell, Camera, Loader2, X } from "lucide-react";
 import { useAvatarContext } from "@/contexts/AvatarContext";
+import { NotificationSettings } from "@/components/notifications/NotificationSettings";
 
 export const Page = () => {
   const [showProfileConfirm, setShowProfileConfirm] = useState(false);
@@ -156,92 +157,7 @@ export const Page = () => {
           </TabsContent>
 
           <TabsContent value="notifications">
-            <Card>
-              <CardHeader>
-                <CardTitle>Preferências de Notificação</CardTitle>
-                <CardDescription>
-                  Configure quais notificações você deseja receber
-                </CardDescription>
-              </CardHeader>
-              {/* <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
-                    <div>
-                      <h4 className="font-medium text-foreground">Notificações por e-mail</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Receba resumos e alertas por e-mail
-                      </p>
-                    </div>
-                    <Switch
-                      checked={notificationSettings.email_notifications}
-                      onCheckedChange={(value) =>
-                        updateNotificationSettings("email_notifications", value)
-                      }
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
-                    <div>
-                      <h4 className="font-medium text-foreground">Notificações push</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Receba notificações no navegador
-                      </p>
-                    </div>
-                    <Switch
-                      checked={notificationSettings.push_notifications}
-                      onCheckedChange={(value) =>
-                        updateNotificationSettings("push_notifications", value)
-                      }
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
-                    <div>
-                      <h4 className="font-medium text-foreground">Alertas de vencimento</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Parcelas, despesas e entradas vencidas
-                      </p>
-                    </div>
-                    <Switch
-                      checked={notificationSettings.overdue_alerts}
-                      onCheckedChange={(value) =>
-                        updateNotificationSettings("overdue_alerts", value)
-                      }
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
-                    <div>
-                      <h4 className="font-medium text-foreground">Alertas de proximidade</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Notificações de itens próximos ao vencimento
-                      </p>
-                    </div>
-                    <Switch
-                      checked={notificationSettings.upcoming_alerts}
-                      onCheckedChange={(value) =>
-                        updateNotificationSettings("upcoming_alerts", value)
-                      }
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between rounded-lg border border-border p-4">
-                    <div>
-                      <h4 className="font-medium text-foreground">Alertas de espaços</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Notificações de espaços compartilhados
-                      </p>
-                    </div>
-                    <Switch
-                      checked={notificationSettings.space_alerts}
-                      onCheckedChange={(value) =>
-                        updateNotificationSettings("space_alerts", value)
-                      }
-                    />
-                  </div>
-                </div>
-              </CardContent> */}
-            </Card>
+            <NotificationSettings />
           </TabsContent>
         </Tabs>
       </div>

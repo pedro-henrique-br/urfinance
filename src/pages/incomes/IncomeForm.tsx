@@ -54,30 +54,27 @@ export const IncomeForm = ({
   const [selectedInstitution, setSelectedInstitution] = useState<any>(null);
   const [newCategoryColor, setNewCategoryColor] = useState('#3B82F6');
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [pendingCategoryName, setPendingCategoryName] = useState<string | null>(null);
 
-  // Função para criar categoria com cor
-  const handleCreateCategory = async (name: string) => {
-    if (!onCreateCategory) return null;
-    
-    try {
-      const category = await onCreateCategory(name, newCategoryColor);
-      setSelectedCategory(category);
-      setForm({ ...form, category_id: category.id });
-      setNewCategoryColor('#3B82F6');
-      setShowColorPicker(false);
-      return category;
-    } catch (error) {
-      console.error('Erro ao criar categoria:', error);
-      return null;
-    }
-  };
-
-  // Renderizar item da categoria com cor
+const handleCreateCategory = async (name: string) => {
+  if (!onCreateCategory) return null;
+  try {
+    const category = await onCreateCategory(name, newCategoryColor);
+    setSelectedCategory(category);
+    setForm({ ...form, category_id: category.id });
+    setNewCategoryColor('#3B82F6');
+    setShowColorPicker(false);
+    return category;
+  } catch (error) {
+    console.error('Erro ao criar categoria:', error);
+    return null;
+  }
+};
   const renderCategoryItem = (category: IncomeCategory) => (
     <div className="flex items-center gap-2">
       {category.color && (
-        <div 
-          className="w-3 h-3 rounded-full" 
+        <div
+          className="w-3 h-3 rounded-full"
           style={{ backgroundColor: category.color }}
         />
       )}
@@ -85,13 +82,12 @@ export const IncomeForm = ({
     </div>
   );
 
-  // Preencher dados iniciais
   useEffect(() => {
     if (initialData?.category_id && categories.length > 0) {
       const category = categories.find(c => c.id === initialData.category_id);
       setSelectedCategory(category || null);
     }
-    
+
     if (initialData?.institution_id && institutions.length > 0) {
       const institution = institutions.find(i => i.id === initialData.institution_id);
       setSelectedInstitution(institution || null);
@@ -102,6 +98,31 @@ export const IncomeForm = ({
     e.preventDefault();
     onSubmit(form);
   };
+
+  const onRequestCreateCategory = (name: string) => {
+  setPendingCategoryName(name);
+  setShowColorPicker(true);
+};
+
+const confirmCreateCategory = async () => {
+  if (!pendingCategoryName || !onCreateCategory) return;
+  try {
+    const category = await onCreateCategory(pendingCategoryName, newCategoryColor);
+    setSelectedCategory(category);
+    setForm({ ...form, category_id: category.id });
+    setNewCategoryColor('#3B82F6');
+    setPendingCategoryName(null);
+    setShowColorPicker(false);
+  } catch (error) {
+    console.error('Erro ao criar categoria:', error);
+  }
+};
+
+const cancelCreateCategory = () => {
+  setPendingCategoryName(null);
+  setShowColorPicker(false);
+  setNewCategoryColor('#3B82F6');
+};
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -131,35 +152,41 @@ export const IncomeForm = ({
                 setSelectedCategory(item);
                 setForm({ ...form, category_id: item?.id || null });
               }}
-              onCreate={handleCreateCategory}
+              onCreate={onRequestCreateCategory}
               searchPlaceholder="Buscar ou criar categoria..."
             />
-            
-            {/* Cor para nova categoria */}
-            {showColorPicker && (
-              <div className="p-3 border rounded-md bg-muted/30">
-                <Label className="text-sm mb-2 block">Cor da nova categoria</Label>
-                <ColorPicker
-                  value={newCategoryColor}
-                  onChange={setNewCategoryColor}
-                />
-              </div>
-            )}
-            
+
+            {showColorPicker && pendingCategoryName && (
+  <div className="p-3 border rounded-md bg-muted/30 space-y-3">
+    <Label className="text-sm block">
+      Cor da nova categoria: <span className="font-semibold">{pendingCategoryName}</span>
+    </Label>
+    <ColorPicker value={newCategoryColor} onChange={setNewCategoryColor} />
+    <div className="flex justify-end gap-2">
+      <Button type="button" variant="outline" size="sm" onClick={cancelCreateCategory}>
+        Cancelar
+      </Button>
+      <Button type="button" size="sm" onClick={confirmCreateCategory}>
+        Criar
+      </Button>
+    </div>
+  </div>
+)}
+
             {/* Preview da categoria */}
             {selectedCategory && (
               <div className="flex items-center gap-2 mt-2">
-                <Badge 
-                  variant="outline" 
+                <Badge
+                  variant="outline"
                   className="flex items-center gap-2 px-3 py-1"
-                  style={{ 
+                  style={{
                     borderColor: selectedCategory.color || '#3B82F6',
                     color: selectedCategory.color || '#3B82F6'
                   }}
                 >
                   {selectedCategory.color && (
-                    <div 
-                      className="w-3 h-3 rounded-full" 
+                    <div
+                      className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: selectedCategory.color }}
                     />
                   )}
@@ -169,6 +196,7 @@ export const IncomeForm = ({
             )}
           </div>
         </div>
+
 
         {/* Tipo de Pagamento */}
         <div className="space-y-2">
@@ -192,7 +220,6 @@ export const IncomeForm = ({
               setSelectedInstitution(item);
               setForm({ ...form, institution_id: item?.id || null });
             }}
-            onCreate={onCreateInstitution}
             searchPlaceholder="Buscar ou criar instituição..."
           />
         </div>

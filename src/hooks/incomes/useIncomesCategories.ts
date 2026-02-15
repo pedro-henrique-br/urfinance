@@ -44,7 +44,6 @@ export function useIncomesCategories() {
       
       setCategories(data || []);
     } catch (err: any) {
-      console.error('Erro ao carregar categorias:', err);
       setError(err.message || 'Erro ao carregar categorias');
     } finally {
       setLoading(false);
@@ -66,7 +65,7 @@ export function useIncomesCategories() {
       const category = await createIncomeCategory(name, color);
       setCategories(prev => [...prev, category]);
       
-      // Atualiza estatísticas após criar nova categoria
+       
       await fetchStats();
       
       return category;
@@ -105,7 +104,7 @@ export function useIncomesCategories() {
       
       setCategories(prev => prev.filter(category => category.id !== id));
       
-      // Atualiza estatísticas após deletar categoria
+      
       await fetchStats();
       
       return { success: true };
@@ -117,29 +116,29 @@ export function useIncomesCategories() {
     }
   }, [fetchStats]);
 
-  // Carregar categorias e estatísticas ao montar
+  
   useEffect(() => {
     fetchCategories();
     fetchStats();
   }, [fetchCategories, fetchStats]);
 
   return {
-    // Dados
+    
     categories,
     stats,
     
-    // Estados
+    
     loading,
     error,
     
-    // Ações
+    
     createCategory,
     updateCategory,
     removeCategory,
     refetch: fetchCategories,
     refreshStats: fetchStats,
     
-    // Utilitários
+    
     getCategoryById: (id: string) => categories.find(cat => cat.id === id),
     getCategoryStats: (categoryId: string | null) => 
       stats.find(stat => stat.category_id === categoryId),

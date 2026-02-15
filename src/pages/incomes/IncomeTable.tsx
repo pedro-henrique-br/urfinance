@@ -113,7 +113,7 @@ export const IncomeTable = ({
               </TableCell>
 
               <TableCell className="text-center">
-                {helpers.formatDate(income?.income_date) || '-'}
+                {income?.income_date.split('T')[0] }
               </TableCell>
 
               <TableCell className="text-center">

@@ -18,7 +18,6 @@ export const useIncomes = () => {
       
       setIncomes(data || []);
     } catch (err: any) {
-      console.error('Erro ao carregar incomes:', err);
       setError(err.message || 'Erro ao carregar entradas');
       setIncomes([]);
     } finally {
