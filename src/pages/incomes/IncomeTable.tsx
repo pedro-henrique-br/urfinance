@@ -13,6 +13,7 @@ import { helpers } from '@/utils/helpers';
 import type { Income } from '@/types/income';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Spinner } from '@/components/ui/spinner';
+import { format, parseISO } from 'date-fns';
 
 interface IncomeTableProps {
   incomes: Income[];
@@ -113,7 +114,7 @@ export const IncomeTable = ({
               </TableCell>
 
               <TableCell className="text-center">
-                {income?.income_date.split('T')[0] }
+                {format(parseISO(income?.income_date.split('T')[0]), 'dd/MM/yyyy')}
               </TableCell>
 
               <TableCell className="text-center">

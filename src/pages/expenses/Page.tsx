@@ -22,12 +22,14 @@ import { useExpenseCategories } from '@/hooks/expenses/useExpenseCategories';
 import { useExpenseTypes } from '@/hooks/expenses/useExpenseTypes';
 import { useInstitutions } from '@/hooks/institution/useInstitution';
 
-// Utilitários
 import { helpers } from '@/utils/helpers';
 import type { Expense, ExpenseFormData } from '@/types/expenses';
+import { ExpenseFilters } from './ExpenseFilters';
+import { useExpenseFilters } from '@/hooks/expenses/useExpenseFilters';
 
 export const Page = () => {
   const { expenses, loading, createExpense, updateExpense, deleteExpense } = useExpenses();
+  const { filters, setFilters, filteredExpenses } = useExpenseFilters(expenses);
   const { categories, createCategory } = useExpenseCategories();
   const { types, createType } = useExpenseTypes();
   const { institutions, createInstitution } = useInstitutions();
@@ -50,17 +52,17 @@ export const Page = () => {
     }
   };
 
- const handleUpdateExpense = async (data: ExpenseFormData) => {
-  if (editingExpense) {
-    const result = await updateExpense(editingExpense.id, data);
-    if (result.success) {
-      setEditingExpense(null);
-      setDialogOpen(false);
-    } else {
-      console.error('Erro ao atualizar:', result.error);
+  const handleUpdateExpense = async (data: ExpenseFormData) => {
+    if (editingExpense) {
+      const result = await updateExpense(editingExpense.id, data);
+      if (result.success) {
+        setEditingExpense(null);
+        setDialogOpen(false);
+      } else {
+        console.error('Erro ao atualizar:', result.error);
+      }
     }
-  }
-};
+  };
 
   const handleEditExpense = (expense: Expense) => {
     setEditingExpense(expense);
@@ -114,10 +116,16 @@ export const Page = () => {
 
       {/* Botões */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          {/* Futuramente filtros */}
-          <ExportButton expenses={expenses} fileName="minhas_despesas" />
+        <div className="flex-1 w-full sm:w-auto">
+          <ExpenseFilters
+            categories={categories || []}
+            types={types || []}
+            institutions={institutions || []}
+            onFilterChange={setFilters}
+          />
         </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <ExportButton expenses={expenses} fileName="minhas_despesas" />
         <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
             <Button className="w-full sm:w-auto">
@@ -125,7 +133,7 @@ export const Page = () => {
               Nova Despesa
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingExpense ? 'Editar Despesa' : 'Nova Despesa'}</DialogTitle>
             </DialogHeader>
@@ -145,10 +153,11 @@ export const Page = () => {
             />
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <ExpenseTable
-        expenses={expenses}
+        expenses={filteredExpenses}
         onEdit={handleEditExpense}
         onDelete={handleDeleteExpense}
         isLoading={loading}

@@ -12,7 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Edit, Trash2 } from 'lucide-react';
 import { helpers } from '@/utils/helpers';
 import type { Expense } from '@/types/expenses';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 interface ExpenseTableProps {
   expenses: Expense[];
@@ -97,10 +97,10 @@ export const ExpenseTable = ({
                   {helpers.formatCurrency(Number(expense.amount).toFixed(2))}
                 </TableCell>
                 <TableCell className="text-center">
-                  {expense.expense_date ? format(new Date(expense.expense_date), 'dd/MM/yyyy') : '-'}
+                  {expense.expense_date ? format(parseISO(expense.expense_date.split('T')[0]), 'dd/MM/yyyy') : '-'}
                 </TableCell>
                 <TableCell className="text-center">
-                  {expense.payment_date ? format(new Date(expense.payment_date), 'dd/MM/yyyy') : '-'}
+                  {expense.payment_date ? format(parseISO(expense.payment_date.split('T')[0]), 'dd/MM/yyyy') : '-'}
                 </TableCell>
                 <TableCell className="text-center">
                   <Checkbox checked={expense.is_paid} disabled className="cursor-default" />

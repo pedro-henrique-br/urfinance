@@ -86,7 +86,7 @@ export async function getExpenses(order: 'asc' | 'desc' = 'desc') {
       institutions(id, name, logo_url)
     `)
     .eq('user_id', user.id)
-    .order('expense_date', { ascending: order === 'asc' });
+    .order('expense_date', { ascending: false });
 
   if (error) throw error;
   return { data, error: null };

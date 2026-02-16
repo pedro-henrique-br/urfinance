@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as api from '@/api/expenses';
-import type { ExpenseCategory } from '@/types/expense';
+import type { ExpenseCategory } from '@/types/expenses';
 
 export const useExpenseCategories = () => {
   const [categories, setCategories] = useState<ExpenseCategory[]>([]);

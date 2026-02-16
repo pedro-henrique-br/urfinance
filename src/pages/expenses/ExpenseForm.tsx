@@ -10,9 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { CreatableCombobox } from '@/components/CreatableCombobox';
-import { ColorPicker } from '@/pages/incomes/ColorPicker'; // ajuste o caminho conforme necessário
+import { ColorPicker } from '@/pages/incomes/ColorPicker';
 import type { ExpenseFormData, ExpenseCategory, ExpenseType } from '@/types/expenses';
 import { format } from 'date-fns';
 
@@ -26,7 +25,7 @@ interface ExpenseFormProps {
   isLoading?: boolean;
   mode?: 'create' | 'edit';
   onCreateCategory?: (name: string, color?: string) => Promise<ExpenseCategory>;
-  onCreateType?: (name: string, categoryId: string | null) => Promise<ExpenseType>;
+  onCreateType?: (name: string, categoryId: string) => Promise<ExpenseType>; // categoryId obrigatório
   onCreateInstitution?: (name: string) => Promise<any>;
 }
 
@@ -58,7 +57,9 @@ export const ExpenseForm = ({
   const [selectedCategory, setSelectedCategory] = useState<ExpenseCategory | null>(null);
   const [selectedType, setSelectedType] = useState<ExpenseType | null>(null);
   const [selectedInstitution, setSelectedInstitution] = useState<any>(null);
-  const [filteredTypes, setFilteredTypes] = useState<ExpenseType[]>(types);
+
+  // Lista local de tipos para garantir que o tipo recém-criado apareça imediatamente
+  const [localTypes, setLocalTypes] = useState<ExpenseType[]>(types);
 
   // Estados para criação de categoria
   const [newCategoryColor, setNewCategoryColor] = useState('#3B82F6');
@@ -68,6 +69,11 @@ export const ExpenseForm = ({
   // Estados para criação de tipo
   const [showTypeCategorySelect, setShowTypeCategorySelect] = useState(false);
   const [pendingTypeName, setPendingTypeName] = useState<string | null>(null);
+
+  // Sincroniza localTypes com a prop types
+  useEffect(() => {
+    setLocalTypes(types);
+  }, [types]);
 
   // Sincroniza selectedCategory quando a lista de categorias é atualizada
   useEffect(() => {
@@ -79,31 +85,29 @@ export const ExpenseForm = ({
     }
   }, [categories, selectedCategory]);
 
-  // Atualiza tipos filtrados quando a categoria muda
-  useEffect(() => {
-    if (selectedCategory) {
-      setFilteredTypes(types.filter(t => t.category_id === selectedCategory.id));
-    } else {
-      setFilteredTypes(types);
-    }
-  }, [selectedCategory, types]);
+  // Filtra tipos com base na categoria selecionada (usando localTypes)
+  const filteredTypes = selectedCategory
+    ? localTypes.filter(t => t.category_id === selectedCategory.id)
+    : localTypes;
 
   // Preenche dados iniciais
   useEffect(() => {
-    if (initialData?.expense_type_id && types.length > 0) {
-      const type = types.find(t => t.id === initialData.expense_type_id);
+    // Preenche tipo e categoria com base no initialData
+    if (initialData?.expense_type_id && localTypes.length > 0) {
+      const type = localTypes.find(t => String(t.id) === String(initialData.expense_type_id));
       setSelectedType(type || null);
       if (type?.category_id) {
-        const category = categories.find(c => c.id === type.category_id);
+        const category = categories.find(c => String(c.id) === String(type.category_id));
         setSelectedCategory(category || null);
       }
     }
+
+    // Preenche instituição
     if (initialData?.institution_id && institutions.length > 0) {
-      const institution = institutions.find(i => i.id === initialData.institution_id);
+      const institution = institutions.find(i => String(i.id) === String(initialData.institution_id));
       setSelectedInstitution(institution || null);
     }
-  }, [initialData, types, categories, institutions]);
-
+  }, [initialData, localTypes, categories, institutions]);
   const renderCategoryItem = (category: ExpenseCategory) => (
     <div className="flex items-center gap-2">
       {category.color && (
@@ -155,25 +159,27 @@ export const ExpenseForm = ({
     setNewCategoryColor('#3B82F6');
   };
 
-  // Criação de tipo
+  // Criação de tipo (agora com categoria obrigatória)
   const onRequestCreateType = (name: string) => {
     setPendingTypeName(name);
     setShowTypeCategorySelect(true);
   };
 
-  const confirmCreateType = async (categoryId: string | null) => {
+  const confirmCreateType = async (categoryId: string) => {
     if (!pendingTypeName || !onCreateType) return;
     try {
       const type = await onCreateType(pendingTypeName, categoryId);
-      // Adiciona o novo tipo à lista local (o hook já faz isso, mas o tipo pode não estar em 'types' ainda?
-      // Na verdade, o hook atualiza o estado, e o componente receberá a nova lista via props 'types'.
-      // Portanto, não precisamos fazer nada além de selecioná-lo.
+      // Adiciona à lista local imediatamente
+      setLocalTypes(prev => [...prev, type]);
       setSelectedType(type);
       setForm({ ...form, expense_type_id: type.id });
-      if (categoryId) {
-        // Define um objeto temporário com o ID; o efeito de sincronização vai preencher os dados completos
-        setSelectedCategory({ id: categoryId } as ExpenseCategory);
+
+      // Seleciona a categoria completa correspondente
+      const fullCategory = categories.find(c => c.id === categoryId);
+      if (fullCategory) {
+        setSelectedCategory(fullCategory);
       }
+
       setShowTypeCategorySelect(false);
       setPendingTypeName(null);
     } catch (error) {
@@ -271,19 +277,13 @@ export const ExpenseForm = ({
           {showTypeCategorySelect && pendingTypeName && (
             <div className="p-3 border rounded-md bg-muted/30 space-y-3">
               <Label className="text-sm block">
-                Selecione a categoria para "{pendingTypeName}"
+                Selecione a categoria para "{pendingTypeName}" <span className="text-red-500">*</span>
               </Label>
-              <Select
-                onValueChange={(value) => {
-                  const catId = value === 'null' ? null : value;
-                  confirmCreateType(catId);
-                }}
-              >
+              <Select onValueChange={(value) => confirmCreateType(value)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Escolha uma categoria (opcional)" />
+                  <SelectValue placeholder="Escolha uma categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="null">Sem categoria</SelectItem>
                   {categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       <div className="flex items-center gap-2">
