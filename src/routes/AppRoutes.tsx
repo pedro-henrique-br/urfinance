@@ -13,12 +13,12 @@ import { Page as Expenses} from "@/pages/expenses/Page";
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<Auth />} />
       <Route path="/login" element={<Auth />} />
       <Route path="/entrar" element={<Auth />} />
       <Route path="/register" element={<Auth />} />
       <Route path="/registrar" element={<Auth />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/" element={<Auth />} />
 
       <Route
         path="/dashboard"

@@ -84,7 +84,7 @@ export default function Auth() {
       toast.error(message);
     } else {
       toast.success("Login realizado com sucesso");
-      navigate("/");
+      navigate("/dashboard");
     }
 
     setIsLoading(false);
