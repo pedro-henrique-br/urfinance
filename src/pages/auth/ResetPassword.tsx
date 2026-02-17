@@ -33,7 +33,6 @@ export default function ResetPassword() {
 
       if (error || !data.session) {
         toast.error("Link inválido ou expirado");
-        navigate("/login");
         return;
       }
 
