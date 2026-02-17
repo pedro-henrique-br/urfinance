@@ -3,6 +3,8 @@
   "style": "new-york",
   "rsc": false,
   "tsx": true,
+  "skipLibCheck": true,
+  "noEmit": true,
   "tailwind": {
     "config": "",
     "css": "src/index.css",
