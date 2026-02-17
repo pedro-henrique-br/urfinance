@@ -8,6 +8,8 @@
       "path": "./tsconfig.node.json"
     }
   ],
+  "skipLibCheck": true,
+  "noEmit": true,
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
