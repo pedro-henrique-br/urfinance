@@ -39,11 +39,11 @@ export const Page = () => {
 
   // Resumo (total pago, total a pagar)
   const summary = useMemo(() => {
-    const total = expenses.reduce((s, e) => s + e.amount, 0);
-    const paid = expenses.filter(e => e.is_paid).reduce((s, e) => s + e.amount, 0);
+    const total = filteredExpenses.reduce((s, e) => s + e.amount, 0);
+    const paid = filteredExpenses.filter(e => e.is_paid).reduce((s, e) => s + e.amount, 0);
     const unpaid = total - paid;
     return { total, paid, unpaid };
-  }, [expenses]);
+  }, [filteredExpenses]);
 
   const handleCreateExpense = async (data: ExpenseFormData) => {
     const result = await createExpense(data);
@@ -115,45 +115,52 @@ export const Page = () => {
       </div>
 
       {/* Botões */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div className="flex-1 w-full sm:w-auto">
-          <ExpenseFilters
-            categories={categories || []}
-            types={types || []}
-            institutions={institutions || []}
-            onFilterChange={setFilters}
-          />
-        </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-        <ExportButton expenses={expenses} fileName="minhas_despesas" />
-        <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
-          <DialogTrigger asChild>
-            <Button className="w-full sm:w-auto">
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Despesa
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editingExpense ? 'Editar Despesa' : 'Nova Despesa'}</DialogTitle>
-            </DialogHeader>
-            <ExpenseForm
-              key={editingExpense ? editingExpense.id : 'create'}
-              initialData={getFormData()}
+      <div className="space-y-4 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div className="flex-1 w-full sm:w-auto">
+            <ExpenseFilters
               categories={categories || []}
               types={types || []}
               institutions={institutions || []}
-              onSubmit={editingExpense ? handleUpdateExpense : handleCreateExpense}
-              onCancel={() => { resetForm(); setDialogOpen(false); }}
-              isLoading={loading}
-              mode={editingExpense ? 'edit' : 'create'}
-              onCreateCategory={createCategory}
-              onCreateType={createType}
-              onCreateInstitution={createInstitution}
+              onFilterChange={setFilters}
             />
-          </DialogContent>
-        </Dialog>
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <ExportButton expenses={expenses} fileName="minhas_despesas" />
+            <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
+              <DialogTrigger asChild>
+                <Button className="w-full sm:w-auto">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Nova Despesa
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>{editingExpense ? 'Editar Despesa' : 'Nova Despesa'}</DialogTitle>
+                </DialogHeader>
+                <ExpenseForm
+                  key={editingExpense ? editingExpense.id : 'create'}
+                  initialData={getFormData()}
+                  categories={categories || []}
+                  types={types || []}
+                  institutions={institutions || []}
+                  onSubmit={editingExpense ? handleUpdateExpense : handleCreateExpense}
+                  onCancel={() => { resetForm(); setDialogOpen(false); }}
+                  isLoading={loading}
+                  mode={editingExpense ? 'edit' : 'create'}
+                  onCreateCategory={createCategory}
+                  onCreateType={createType}
+                  onCreateInstitution={createInstitution}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
+        {!loading && filteredExpenses.length > 0 && (
+          <div className="text-sm text-muted-foreground">
+            Mostrando {filteredExpenses.length} de {expenses.length} despesas
+          </div>
+        )}
       </div>
 
       <ExpenseTable
