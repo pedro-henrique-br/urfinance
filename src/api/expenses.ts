@@ -7,7 +7,6 @@ async function getCurrentUser() {
   return user;
 }
 
-// ==================== EXPENSE CATEGORIES ====================
 export async function getExpenseCategories() {
   const user = await getCurrentUser();
   if (!user) throw new Error('Usuário não autenticado');
@@ -68,8 +67,7 @@ export async function createExpenseType(name: string, category_id?: string | nul
   return data;
 }
 
-// ==================== EXPENSES ====================
-export async function getExpenses(order: 'asc' | 'desc' = 'desc') {
+export async function getExpenses() {
   const user = await getCurrentUser();
   if (!user) throw new Error('Usuário não autenticado');
 
@@ -135,7 +133,7 @@ export async function updateExpense(id: string, data: Partial<ExpenseFormData>) 
     .from('expenses')
     .update(updateData)
     .eq('id', id)
-    .eq('user_id', user?.user.id)
+    .eq('user_id', user?.user?.id)
     .select(`
       *,
       expense_type:expense_types(

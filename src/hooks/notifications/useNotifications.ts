@@ -17,7 +17,6 @@ export const useNotifications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Carregar notificações do banco
   const loadNotifications = useCallback(async () => {
     if (!user) return;
 
@@ -29,18 +28,16 @@ export const useNotifications = () => {
       
       setNotifications(data || []);
       
-      // Atualizar contador de não lidas
       const count = await notificationsApi.getUnreadCount();
       setUnreadCount(count);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Erro ao carregar notificações:', err);
-      setError(err.message);
+      setError(err?.message);
     } finally {
       setLoading(false);
     }
   }, [user]);
 
-  // Verificar entradas vencidas e próximas
   const checkIncomesForNotifications = useCallback(async () => {
     if (!user || !settings || settingsLoading) return;
 
@@ -48,19 +45,16 @@ export const useNotifications = () => {
     today.setHours(0, 0, 0, 0);
 
     for (const income of incomes) {
-      // Ignorar entradas já recebidas
       if (income.is_received) continue;
 
       const dueDate = parseISO(income.income_date);
       dueDate.setHours(0, 0, 0, 0);
 
-      // Verificar se já existe notificação para esta entrada
       const existingNotification = notifications.find(
         n => n.reference_id === income.id && 
         (n.type === 'income_overdue' || n.type === 'income_upcoming')
       );
 
-      // NOTIFICAÇÃO DE VENCIMENTO (entrada passou da data)
       if (settings.overdue_alerts && isBefore(dueDate, today)) {
         if (!existingNotification || existingNotification.type !== 'income_overdue') {
           await createIncomeNotification({
@@ -71,7 +65,6 @@ export const useNotifications = () => {
         }
       }
 
-      // NOTIFICAÇÃO DE PROXIMIDADE (entrada próxima do vencimento)
       if (settings.upcoming_alerts) {
         const upcomingDate = addDays(today, settings.upcoming_days);
         
@@ -88,14 +81,13 @@ export const useNotifications = () => {
     }
   }, [user, incomes, settings, settingsLoading, notifications]);
 
-  // Criar notificação para entrada
   const createIncomeNotification = useCallback(async ({
     type,
     income,
     dueDate,
   }: {
     type: 'income_overdue' | 'income_upcoming';
-    income: any;
+    income: unknown;
     dueDate: Date;
   }) => {
     const today = new Date();
@@ -114,19 +106,18 @@ export const useNotifications = () => {
       message = `"${income.description}" vence em ${daysUntil} ${daysUntil === 1 ? 'dia' : 'dias'}. Prepare-se para receber!`;
     }
 
-    // Criar notificação no banco
     const { data, error } = await supabase
       .from('notifications')
       .insert({
-        user_id: user.id,
+        user_id: user?.id,
         type,
         title,
         message,
         reference_id: income.id,
         reference_type: 'income',
         expires_at: type === 'income_overdue' 
-          ? addDays(new Date(), 30).toISOString() // Expira em 30 dias
-          : dueDate.toISOString(), // Expira na data de vencimento
+          ? addDays(new Date(), 30).toISOString() 
+          : dueDate.toISOString(),
       })
       .select()
       .single();
@@ -137,7 +128,6 @@ export const useNotifications = () => {
     }
   }, [user]);
 
-  // Marcar notificação como lida
   const markAsRead = useCallback(async (id: string) => {
     try {
       const { data } = await notificationsApi.markNotificationAsRead(id);
@@ -153,7 +143,6 @@ export const useNotifications = () => {
     }
   }, []);
 
-  // Marcar todas como lidas
   const markAllAsRead = useCallback(async () => {
     try {
       await notificationsApi.markAllNotificationsAsRead();
@@ -167,7 +156,6 @@ export const useNotifications = () => {
     }
   }, []);
 
-  // Deletar notificação
   const deleteNotification = useCallback(async (id: string) => {
     try {
       const notification = notifications.find(n => n.id === id);
@@ -183,21 +171,17 @@ export const useNotifications = () => {
     }
   }, [notifications]);
 
-  // Carregar notificações ao montar
   useEffect(() => {
     if (user) {
       loadNotifications();
     }
   }, [user, loadNotifications]);
 
-  // Verificar entradas periodicamente
   useEffect(() => {
     if (!user || !settings) return;
 
-    // Verificar imediatamente
     checkIncomesForNotifications();
 
-    // Verificar a cada hora
     const interval = setInterval(checkIncomesForNotifications, 60 * 60 * 1000);
 
     return () => clearInterval(interval);

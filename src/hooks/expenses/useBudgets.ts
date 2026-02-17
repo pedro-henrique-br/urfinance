@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as api from '@/api/expenses';
-import type { ExpenseBudget } from '@/types/expense';
+import type { ExpenseBudget } from '@/types/expenses';
 
 export const useBudgets = (month: number, year: number) => {
   const [budgets, setBudgets] = useState<ExpenseBudget[]>([]);

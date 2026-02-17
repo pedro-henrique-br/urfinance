@@ -27,6 +27,7 @@ export const useExpenseTypes = () => {
       // Adiciona o novo tipo à lista local
       setTypes(prev => [...prev, type]);
       return type;
+      // eslint-disable-next-line no-useless-catch
     } catch (err: any) {
       throw err;
     } finally {
@@ -40,6 +41,7 @@ export const useExpenseTypes = () => {
       const updated = await typesApi.updateExpenseType(id, updates);
       setTypes(prev => prev.map(t => t.id === id ? updated : t));
       return updated;
+    // eslint-disable-next-line no-useless-catch
     } catch (err: any) {
       throw err;
     } finally {
@@ -53,6 +55,7 @@ export const useExpenseTypes = () => {
       await typesApi.deleteExpenseType(id);
       setTypes(prev => prev.filter(t => t.id !== id));
       return { success: true };
+      // eslint-disable-next-line no-useless-catch
     } catch (err: any) {
       throw err;
     } finally {

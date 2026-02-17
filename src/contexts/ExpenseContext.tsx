@@ -1,25 +1,26 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, type ReactNode } from 'react';
 import { useExpenses } from '@/hooks/expenses/useExpenses';
 import { useExpenseCategories } from '@/hooks/expenses/useExpenseCategories';
 import { useExpenseTypes } from '@/hooks/expenses/useExpenseTypes';
-import type { Expense, ExpenseFormData } from '@/types/expense';
+import type { Expense, ExpenseFormData } from '@/types/expenses';
 
 interface ExpenseContextType {
   expenses: Expense[];
   loading: boolean;
   error: string | null;
-  categories: any[];
-  types: any[];
-  createExpense: (data: ExpenseFormData) => Promise<any>;
-  updateExpense: (id: string, data: Partial<ExpenseFormData>) => Promise<any>;
-  deleteExpense: (id: string) => Promise<any>;
-  createCategory: (name: string, color?: string) => Promise<any>;
-  createType: (name: string, category_id?: string | null) => Promise<any>;
+  categories: unknown[];
+  types: unknown[];
+  createExpense: (data: ExpenseFormData) => Promise<unknown>;
+  updateExpense: (id: string, data: Partial<ExpenseFormData>) => Promise<unknown>;
+  deleteExpense: (id: string) => Promise<unknown>;
+  createCategory: (name: string, color?: string) => Promise<unknown>;
+  createType: (name: string, category_id?: string | null) => Promise<unknown>;
   refreshExpenses: () => Promise<void>;
 }
 
 const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useExpenseContext = () => {
   const context = useContext(ExpenseContext);
   if (!context) throw new Error('useExpenseContext must be used within ExpenseProvider');

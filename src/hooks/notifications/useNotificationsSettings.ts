@@ -19,7 +19,7 @@ export const useNotificationsSettings = () => {
       if (error) throw error;
       
       setSettings(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Erro ao carregar configurações:', err);
       setError(err.message);
     } finally {
@@ -38,7 +38,7 @@ export const useNotificationsSettings = () => {
       
       setSettings(data);
       return { success: true, data };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Erro ao atualizar configurações:', err);
       return { success: false, error: err.message };
     } finally {

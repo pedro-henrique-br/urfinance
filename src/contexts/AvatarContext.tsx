@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import {
   createContext,
   useContext,
@@ -66,7 +67,7 @@ export function AvatarProvider({ children }: { children: ReactNode }) {
 
     const parsed = avatarSchema.safeParse({ file });
     if (!parsed.success) {
-      setAvatarError(parsed.error.errors[0].message);
+      setAvatarError(parsed.error.message);
       return;
     }
 

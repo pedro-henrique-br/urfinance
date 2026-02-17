@@ -3,8 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Loader2, Bell, BellRing, AlertCircle } from 'lucide-react';
+import { Loader2, Bell, AlertCircle } from 'lucide-react';
 import { useNotificationsSettings } from '@/hooks/notifications/useNotificationsSettings';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 

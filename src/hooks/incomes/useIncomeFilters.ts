@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import type { Income } from '@/types/income';
 import type { FilterState } from '@/pages/incomes/IncomeFilters';
-import { isWithinInterval, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 
 export const useIncomeFilters = (incomes: Income[]) => {
   const [filters, setFilters] = useState<FilterState>({

@@ -38,9 +38,6 @@ export function useUserSettings() {
 
     if (!parsed.success) {
       const errors: Record<string, string> = {};
-      parsed.error.errors.forEach(err => {
-        errors[String(err.path[0])] = err.message;
-      });
       setProfileErrors(errors);
       return false;
     }

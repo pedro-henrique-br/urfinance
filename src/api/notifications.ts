@@ -1,5 +1,5 @@
 import { supabase } from "@/config/supabase";
-import type { Notification, NotificationSettings } from "@/types/notifications";
+import type { NotificationSettings } from "@/types/notifications";
 import { user } from "./auth";
 
 export async function getNotificationSettings() {

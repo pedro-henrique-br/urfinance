@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -11,17 +11,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useNotifications } from '@/hooks/notifications/useNotifications';
-import { useNavigate } from 'react-router-dom';
 
 export const NotificationBell = () => {
   const [open, setOpen] = useState(false);
   const { notifications, unreadCount, markAsRead, markAllAsRead, deleteNotification } = useNotifications();
-  const navigate = useNavigate();
 
   const handleNotificationClick = async (notification: any) => {
     await markAsRead(notification.id);
     
-    // Navegar para a entrada relacionada
     if (notification.reference_type === 'income' && notification.reference_id) {
       // Você pode implementar a navegação para a página da entrada
       // navigate(`/incomes?id=${notification.reference_id}`);
@@ -86,7 +83,7 @@ export const NotificationBell = () => {
           )}
         </div>
 
-        <ScrollArea className="h-[400px]">
+        <ScrollArea className="h-100">
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-32 text-center p-4">
               <Bell className="h-8 w-8 text-muted-foreground mb-2" />

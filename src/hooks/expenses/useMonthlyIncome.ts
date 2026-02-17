@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as api from '@/api/expenses';
-import type { MonthlyIncome } from '@/types/expense';
+import type { MonthlyIncome } from '@/types/expenses';
 
 export const useMonthlyIncome = (month: number, year: number) => {
   const [income, setIncome] = useState<MonthlyIncome | null>(null);

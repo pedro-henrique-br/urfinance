@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import type { Expense } from '@/types/expenses';
 import type { ExpenseFilterState } from '@/pages/expenses/ExpenseFilters';
-import { isWithinInterval, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 
 export const useExpenseFilters = (expenses: Expense[]) => {
   const [filters, setFilters] = useState<ExpenseFilterState>({
@@ -24,7 +24,7 @@ export const useExpenseFilters = (expenses: Expense[]) => {
 
       // Filtro por categoria (através do tipo)
       if (filters.categoryId) {
-        if (expense.expense_type?.category_id !== filters.categoryId) return false;
+        if (expense.expense_types?.category_id !== filters.categoryId) return false;
       }
 
       // Filtro por tipo
