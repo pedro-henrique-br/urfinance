@@ -1,5 +1,5 @@
 import { supabase } from "@/config/supabase";
-import type { Expense, ExpenseFormData, ExpenseCategory, ExpenseType, ExpenseBudget } from "@/types/expense";
+import type { ExpenseFormData } from "@/types/expenses";
 import { user } from "./auth";
 
 async function getCurrentUser() {
