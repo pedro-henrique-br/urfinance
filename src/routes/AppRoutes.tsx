@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Auth from "@/pages/auth/Auth";
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -13,7 +13,7 @@ import { Page as Expenses} from "@/pages/expenses/Page";
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Auth />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Auth />} />
       <Route path="/entrar" element={<Auth />} />
       <Route path="/register" element={<Auth />} />
