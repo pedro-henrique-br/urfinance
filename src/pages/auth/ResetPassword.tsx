@@ -30,13 +30,12 @@ export default function ResetPassword() {
   useEffect(() => {
     async function loadSession() {
       const { data, error } = await supabase.auth.getSession();
-
-      if (error || !data.session) {
+      if (error && !data?.session) {
         toast.error("Link inválido ou expirado");
         return;
       }
 
-      setEmail(data.session.user.email ?? "");
+      setEmail(data?.session?.user?.email ?? "");
       setLoading(false);
     }
 
