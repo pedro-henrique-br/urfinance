@@ -31,7 +31,7 @@ export interface Expense {
   created_at: string;
   updated_at: string;
   // joins opcionais
-  expense_types?: ExpenseType;
+  expense_type?: ExpenseType & { expense_category?: ExpenseCategory };
   institutions?: {
     id: string;
     name: string;

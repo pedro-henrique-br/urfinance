@@ -110,7 +110,7 @@ export const ExpenseFilters = ({
   const filteredTypes = filters.categoryId
     ? types.filter(t => t.category_id === filters.categoryId)
     : types;
-
+  
   return (
     <div className={`space-y-4 ${className}`}>
       <div className="flex items-center gap-2">
