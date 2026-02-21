@@ -91,7 +91,15 @@ export const ExpenseTable = ({
                   )}
                 </TableCell>
                 <TableCell className="text-center">
-                  {expense.expense_type?.name || '-'}
+                  {category ? (
+                    <Badge
+                      variant="default"
+                      style={{ background: category?.color }}
+                      className="inline-flex items-center gap-1"
+                    >
+                      {expense?.expense_type?.name}
+                    </Badge>
+                  ) : ("-")}
                 </TableCell>
                 <TableCell className="text-center">{expense.institutions?.name || '-'}</TableCell>
                 <TableCell className="text-center font-semibold text-red-600">
