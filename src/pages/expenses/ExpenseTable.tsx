@@ -56,7 +56,8 @@ export const ExpenseTable = ({
             <TableHead className="text-center">Valor</TableHead>
             <TableHead className="text-center">Data Despesa</TableHead>
             <TableHead className="text-center">Data Pagamento</TableHead>
-            <TableHead className="text-center">Pago?</TableHead>
+            <TableHead className="text-center">Data de Criação</TableHead>
+            <TableHead className="text-center">Pago</TableHead>
             <TableHead className="text-center">Ações</TableHead>
           </TableRow>
         </TableHeader>
@@ -101,6 +102,9 @@ export const ExpenseTable = ({
                 </TableCell>
                 <TableCell className="text-center">
                   {expense.payment_date ? format(parseISO(expense.payment_date.split('T')[0]), 'dd/MM/yyyy') : '-'}
+                </TableCell>
+                <TableCell className="text-center">
+                  {expense.created_at ? format(parseISO(expense.created_at.split('T')[0]), 'dd/MM/yyyy') : '-'}
                 </TableCell>
                 <TableCell className="text-center">
                   <Checkbox checked={expense.is_paid} disabled className="cursor-default" />

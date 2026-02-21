@@ -29,7 +29,7 @@ import { useExpenseFilters } from '@/hooks/expenses/useExpenseFilters';
 
 export const Page = () => {
   const { expenses, loading, createExpense, updateExpense, deleteExpense } = useExpenses();
-  const { filters, setFilters, filteredExpenses } = useExpenseFilters(expenses);
+  const { setFilters, filteredExpenses } = useExpenseFilters(expenses);
   const { categories, createCategory } = useExpenseCategories();
   const { types, createType } = useExpenseTypes();
   const { institutions, createInstitution } = useInstitutions();
@@ -134,7 +134,7 @@ export const Page = () => {
                   Nova Despesa
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto p-6">
                 <DialogHeader>
                   <DialogTitle>{editingExpense ? 'Editar Despesa' : 'Nova Despesa'}</DialogTitle>
                 </DialogHeader>

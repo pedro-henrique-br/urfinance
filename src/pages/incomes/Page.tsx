@@ -213,7 +213,7 @@ export const Page = () => {
                 </Button>
               </DialogTrigger>
 
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto p-6">
                 <DialogHeader>
                   <DialogTitle>
                     {editingIncome ? 'Editar Entrada' : 'Nova Entrada'}

@@ -23,7 +23,8 @@ export const useExpenses = () => {
     try {
       setLoading(true);
       const newExpense = await api.createExpense(data);
-      setExpenses(prev => [newExpense, ...prev]);
+      const { data: expenses } = await api.getExpenses();
+      setExpenses(expenses);
       return { success: true, data: newExpense };
     } catch (err: any) {
       return { success: false, error: err.message };

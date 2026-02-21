@@ -59,7 +59,8 @@ export const IncomeTable = ({
             <TableHead className="text-center">Pagamento</TableHead>
             <TableHead className="text-center">Instituição</TableHead>
             <TableHead className="text-center">Valor</TableHead>
-            <TableHead className="text-center">Data</TableHead>
+            <TableHead className="text-center">Data de Entrada</TableHead>
+            <TableHead className="text-center">Data de Criação</TableHead>
             <TableHead className="text-center">Fixa</TableHead>
             <TableHead className="text-center">Status</TableHead>
             <TableHead className="text-center">Ações</TableHead>
@@ -115,6 +116,10 @@ export const IncomeTable = ({
 
               <TableCell className="text-center">
                 {format(parseISO(income?.income_date.split('T')[0]), 'dd/MM/yyyy')}
+              </TableCell>
+
+              <TableCell className="text-center">
+                {format(parseISO(income?.created_at.split('T')[0]), 'dd/MM/yyyy')}
               </TableCell>
 
               <TableCell className="text-center">

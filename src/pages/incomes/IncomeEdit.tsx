@@ -46,6 +46,8 @@ export const IncomeEdit = ({
         <div>
           <Label>Tipo de renda</Label>
           <CreatableCombobox
+            renderItem={(item) => item.name}
+            placeholder="Tipo de renda..."
             items={categories}
             value={selectedCategory}
             onSelect={(item) => {

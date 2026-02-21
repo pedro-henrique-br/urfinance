@@ -215,6 +215,7 @@ const cancelCreateCategory = () => {
           <CreatableCombobox
             items={institutions}
             value={selectedInstitution}
+            renderItem={(item) => item.name}
             placeholder="Selecione uma instituição"
             onSelect={(item) => {
               setSelectedInstitution(item);
@@ -255,10 +256,11 @@ const cancelCreateCategory = () => {
         <div className="space-y-2">
           <Label htmlFor="is_fixed">Tipo</Label>
           <Select
+            
             value={form.is_fixed ? 'fixed' : 'variable'}
             onValueChange={(v) => setForm({ ...form, is_fixed: v === 'fixed' })}
           >
-            <SelectTrigger>
+            <SelectTrigger className='w-full'>
               <SelectValue placeholder="Selecione o tipo" />
             </SelectTrigger>
             <SelectContent>

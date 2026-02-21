@@ -25,7 +25,7 @@ interface ExpenseFormProps {
   isLoading?: boolean;
   mode?: 'create' | 'edit';
   onCreateCategory?: (name: string, color?: string) => Promise<ExpenseCategory>;
-  onCreateType?: (name: string, categoryId: string) => Promise<ExpenseType>; // categoryId obrigatório
+  onCreateType?: (name: string, categoryId: string) => Promise<ExpenseType>;
   onCreateInstitution?: (name: string) => Promise<any>;
 }
 
@@ -108,6 +108,7 @@ export const ExpenseForm = ({
       setSelectedInstitution(institution || null);
     }
   }, [initialData, localTypes, categories, institutions]);
+
   const renderCategoryItem = (category: ExpenseCategory) => (
     <div className="flex items-center gap-2">
       {category.color && (
@@ -224,8 +225,9 @@ export const ExpenseForm = ({
 
         {/* Categoria (para filtrar tipos) */}
         <div className="space-y-2">
-          <Label>Categoria (opcional, para filtrar tipos)</Label>
+          <Label>Categoria</Label>
           <CreatableCombobox
+            className="w-full" /* Garante mesma largura dos inputs */
             items={categories}
             value={selectedCategory}
             placeholder="Filtrar por categoria"
@@ -263,10 +265,12 @@ export const ExpenseForm = ({
         <div className="space-y-2">
           <Label htmlFor="type">Tipo de Despesa</Label>
           <CreatableCombobox
+            className="w-full" /* Garante mesma largura */
             items={filteredTypes}
             value={selectedType}
             placeholder="Selecione um tipo"
             renderItem={renderTypeItem}
+            disabled={!selectedCategory} /* Desabilitado se não houver categoria */
             onSelect={(item) => {
               setSelectedType(item);
               setForm({ ...form, expense_type_id: item?.id || null });
@@ -274,7 +278,7 @@ export const ExpenseForm = ({
             onCreate={onCreateType ? onRequestCreateType : undefined}
             searchPlaceholder="Buscar tipo..."
           />
-          {showTypeCategorySelect && pendingTypeName && (
+           {showTypeCategorySelect && pendingTypeName && (
             <div className="p-3 border rounded-md bg-muted/30 space-y-3">
               <Label className="text-sm block">
                 Selecione a categoria para "{pendingTypeName}" <span className="text-red-500">*</span>
@@ -307,8 +311,10 @@ export const ExpenseForm = ({
         <div className="space-y-2">
           <Label htmlFor="institution">Instituição / Banco</Label>
           <CreatableCombobox
+            className="w-full" /* Garante mesma largura */
             items={institutions}
             value={selectedInstitution}
+            renderItem={(item) => item.name}
             placeholder="Selecione uma instituição"
             onSelect={(item) => {
               setSelectedInstitution(item);
