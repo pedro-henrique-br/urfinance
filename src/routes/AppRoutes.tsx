@@ -9,6 +9,7 @@ import Forbidden from "../pages/errors/Forbidden";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import {Page as Receives} from "@/pages/incomes/Page";
 import { Page as Expenses} from "@/pages/expenses/Page";
+import { Page as Budgets} from "@/pages/budgets/Page";
 
 export default function AppRoutes() {
   return (
@@ -41,6 +42,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <Expenses />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/orcamentos"
+        element={
+          <ProtectedRoute>
+            <Budgets />
           </ProtectedRoute>
         }
       />

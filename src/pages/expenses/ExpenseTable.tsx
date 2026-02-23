@@ -102,7 +102,7 @@ export const ExpenseTable = ({
                   ) : ("-")}
                 </TableCell>
                 <TableCell className="text-center">{expense.institutions?.name || '-'}</TableCell>
-                <TableCell className="text-center font-semibold text-red-600">
+                <TableCell className={`text-center font-semibold ${expense.is_paid ? "text-green-600" : "text-red-600"}`}>
                   {helpers.formatCurrency(Number(expense.amount).toFixed(2))}
                 </TableCell>
                 <TableCell className="text-center">

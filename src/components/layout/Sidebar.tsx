@@ -8,6 +8,7 @@ import {
   Users,
   Settings,
   LogOut,
+  Calculator,
 } from "lucide-react";
 import logo from '/assets/images/logo/urfinance.png'
 import { cn } from "@/lib/utils";
@@ -17,9 +18,10 @@ const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { icon: ArrowDownCircle, label: "Entradas", path: "/entradas" },
   { icon: ArrowUpCircle, label: "Saídas", path: "/saidas" },
-  { icon: PiggyBank, label: "Poupança", path: "/poupancas" },
-  { icon: Building2, label: "Financiamentos", path: "/financiamentos" },
-  { icon: Users, label: "Espaços", path: "/espacos" },
+  { icon: Calculator, label: "Orçamentos", path: "/orcamentos" },
+  // { icon: PiggyBank, label: "Poupança", path: "/poupancas" },
+  // { icon: Building2, label: "Financiamentos", path: "/financiamentos" },
+  // { icon: Users, label: "Espaços", path: "/espacos" },
 ];
 
 export function Sidebar() {
